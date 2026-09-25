@@ -41,6 +41,25 @@ export class NewProjectsPlanService {
   }
 
   /**
+   * Retrieves all new project plans from the database.
+   *
+   * @returns A promise that resolves to an array of {@link NewProjectsPlanDocument} instances.
+   */
+  async getAll(): Promise<NewProjectsPlanDocument[]> {
+    return this.newProjectPlansModel.find().exec();
+  }
+
+  /**
+   * Retrieves a single new project plan by its unique database ID.
+   *
+   * @param id - The unique MongoDB ObjectId string of the project plan.
+   * @returns A promise that resolves to the found {@link NewProjectsPlanDocument}, or `null` if no match exists.
+   */
+  async getById(id: string): Promise<NewProjectsPlanDocument | null> {
+    return this.newProjectPlansModel.findById(id).exec();
+  }
+
+  /**
   * Updates an existing project plan document via mongoose document `_id`.
   * 
   * @param id - Mongoose document `_id`.
