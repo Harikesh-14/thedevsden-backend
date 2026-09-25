@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { NewProjectsPlan, NewProjectsPlanDocument } from './schemas/new-projects-plan.schema.js';
 import { Model } from 'mongoose'
 import { CreateNewProjectsPlanDto } from './dto/create-new-projects-plan.dto.js';
+import { UpdateNewProjectsPlanDto } from './dto/update-new-projects-plan.dto.js';
 
 /**
 * Service responsible for managing thought entities and their database operations.
@@ -37,7 +38,15 @@ export class NewProjectsPlanService {
   * });
   */
   async create(dto: CreateNewProjectsPlanDto): Promise<NewProjectsPlanDocument> {
-    return this.newProjectPlansModel.create(dto)
+    try {
+      return await this.newProjectPlansModel.create(dto)
+    } catch (error: any) {
+      if (error?.code === 11000) {
+        throw new ConflictException(`A project plan with this title already exists.`)
+      }
+
+      throw error
+    }
   }
 
   /**
@@ -56,7 +65,23 @@ export class NewProjectsPlanService {
    * @returns A promise that resolves to the found {@link NewProjectsPlanDocument}, or `null` if no match exists.
    */
   async getById(id: string): Promise<NewProjectsPlanDocument | null> {
-    return this.newProjectPlansModel.findById(id).exec();
+    try {
+      const projectPlan = await this.newProjectPlansModel
+        .findById(id)
+        .exec()
+
+      if (!projectPlan) {
+        throw new NotFoundException(`Project plan with ID '${id}' was not found.`)
+      }
+
+      return projectPlan
+    } catch (error: any) {
+      if (error.name === 'CastError') {
+        throw new BadRequestException(`Invalid project plan ID.`)
+      }
+
+      throw error;
+    }
   }
 
   /**
@@ -67,8 +92,35 @@ export class NewProjectsPlanService {
   * 
   * @returns A promise that resolves to the newly updated {@link NewProjectsPlan} document or null value.
   */
-  async updateById(id: string, dto: CreateNewProjectsPlanDto): Promise<NewProjectsPlanDocument | null> {
-    return this.newProjectPlansModel.findByIdAndUpdate(id, dto, { returnDocument: 'after' })
+  async update(id: string, dto: UpdateNewProjectsPlanDto): Promise<NewProjectsPlanDocument> {
+    try {
+      const projectPlan = await this.newProjectPlansModel
+        .findByIdAndUpdate(
+          id,
+          dto,
+          {
+            returnDocument: 'after',
+            runValidators: true,
+          },
+        )
+        .exec()
+
+      if (!projectPlan) {
+        throw new NotFoundException(
+          `Project plan with ID '${id}' was not found.`,
+        )
+      }
+
+      return projectPlan
+    } catch (error: any) {
+      if (error.code === 11000) {
+        throw new ConflictException(
+          'A project plan with this title already exists.',
+        )
+      }
+
+      throw error
+    }
   }
 
   /**
@@ -78,7 +130,17 @@ export class NewProjectsPlanService {
   * @returns A promise that resolves to the deleted {@link NewProjectsPlan} document,
   * or `null` if no document was found.
   */
-  async deleteById(id: string): Promise<NewProjectsPlanDocument | null> {
-    return this.newProjectPlansModel.findByIdAndDelete(id);
+  async deleteById(id: string): Promise<NewProjectsPlanDocument> {
+    const projectPlan = await this.newProjectPlansModel
+      .findByIdAndDelete(id)
+      .exec()
+
+    if (!projectPlan) {
+      throw new NotFoundException(
+        `Project plan with ID '${id}' was not found.`,
+      )
+    }
+
+    return projectPlan
   }
 }

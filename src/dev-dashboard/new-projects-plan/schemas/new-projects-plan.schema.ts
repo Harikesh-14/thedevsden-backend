@@ -9,7 +9,8 @@ export type NewProjectsPlanDocument = HydratedDocument<NewProjectsPlan>
 export class NewProjectsPlan {
   @Prop({
     required: true,
-    trim: true
+    trim: true,
+    unique: true,
   })
   title: string;
 
