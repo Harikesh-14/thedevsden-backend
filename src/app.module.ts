@@ -5,6 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThoughtsModule } from './non-functional-req/thoughts/thoughts.module.js';
 import { NewProjectsPlanModule } from './dev-dashboard/new-projects-plan/new-projects-plan.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { StringValue } from 'ms'
 
 @Module({
   imports: [
@@ -21,10 +25,10 @@ import { NewProjectsPlanModule } from './dev-dashboard/new-projects-plan/new-pro
     }),
 
     ThoughtsModule,
-
-    NewProjectsPlanModule
+    NewProjectsPlanModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
