@@ -1,10 +1,10 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument } from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type NewProjectsPlanDocument = HydratedDocument<NewProjectsPlan>
+export type NewProjectsPlanDocument = HydratedDocument<NewProjectsPlan>;
 
 @Schema({
-  timestamps: true
+  timestamps: true,
 })
 export class NewProjectsPlan {
   @Prop({
@@ -79,7 +79,8 @@ export class NewProjectsPlan {
     devOps: string[];
     testing: string[];
     other: string[];
-  }
+  };
 }
 
-export const NewProjectsPlanSchema = SchemaFactory.createForClass(NewProjectsPlan);
+export const NewProjectsPlanSchema =
+  SchemaFactory.createForClass(NewProjectsPlan);

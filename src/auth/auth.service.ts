@@ -1,4 +1,9 @@
-import { ConflictException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './user/schema/user.schema.js';
 import { Model } from 'mongoose';
@@ -13,14 +18,26 @@ export class AuthService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
-    private readonly jwtService: JwtService
-  ) { }
+    private readonly jwtService: JwtService,
+  ) {}
 
   /**
    * Helper function to generate access and refresh tokens.
    */
-  private async getTokens(userId: string, email: string, firstName: string, lastName: string, phoneNumber: string) {
-    const payload: JwtPayload = { sub: userId, email, firstName, lastName, phoneNumber };
+  private async getTokens(
+    userId: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
+  ) {
+    const payload: JwtPayload = {
+      sub: userId,
+      email,
+      firstName,
+      lastName,
+      phoneNumber,
+    };
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
@@ -41,7 +58,9 @@ export class AuthService {
    */
   private async updateRefreshTokenHash(userId: string, refreshToken: string) {
     const hash = await bcrypt.hash(refreshToken, 10);
-    await this.userModel.findByIdAndUpdate(userId, { refreshTokenHash: hash }).exec();
+    await this.userModel
+      .findByIdAndUpdate(userId, { refreshTokenHash: hash })
+      .exec();
   }
 
   /**
@@ -52,7 +71,9 @@ export class AuthService {
    * @throws {@link ConflictException} If email is already in use.
    */
   async register(dto: RegisterDto) {
-    const existingUser = await this.userModel.findOne({ email: dto.email.toLowerCase() }).exec();
+    const existingUser = await this.userModel
+      .findOne({ email: dto.email.toLowerCase() })
+      .exec();
     if (existingUser) {
       throw new ConflictException('User with this email id already exists.');
     }
@@ -65,7 +86,7 @@ export class AuthService {
       firstName: dto.firstName,
       lastName: dto.lastName,
       phoneNumber: dto.phoneNumber,
-      password: passwordHash
+      password: passwordHash,
     });
 
     await newUser.save();
@@ -91,10 +112,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password.');
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      dto.password,
-      user.password,
-    );
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password.');
@@ -108,10 +126,7 @@ export class AuthService {
       user.phoneNumber,
     );
 
-    await this.updateRefreshTokenHash(
-      user._id.toString(),
-      tokens.refreshToken,
-    );
+    await this.updateRefreshTokenHash(user._id.toString(), tokens.refreshToken);
 
     const { password, ...userObj } = user.toObject();
 
@@ -131,12 +146,21 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const refreshTokenMatches = await bcrypt.compare(refreshToken, user.refreshTokenHash);
+    const refreshTokenMatches = await bcrypt.compare(
+      refreshToken,
+      user.refreshTokenHash,
+    );
     if (!refreshTokenMatches) {
       throw new ForbiddenException('Access Denied');
     }
 
-    const tokens = await this.getTokens(user._id.toString(), user.email, user.firstName, user.lastName, user.phoneNumber);
+    const tokens = await this.getTokens(
+      user._id.toString(),
+      user.email,
+      user.firstName,
+      user.lastName,
+      user.phoneNumber,
+    );
     await this.updateRefreshTokenHash(user._id.toString(), tokens.refreshToken);
 
     return tokens;
@@ -146,6 +170,8 @@ export class AuthService {
    * Clears user refresh token hash on logout.
    */
   async logout(userId: string) {
-    await this.userModel.findByIdAndUpdate(userId, { refreshTokenHash: null }).exec();
+    await this.userModel
+      .findByIdAndUpdate(userId, { refreshTokenHash: null })
+      .exec();
   }
 }

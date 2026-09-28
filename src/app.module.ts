@@ -8,7 +8,7 @@ import { NewProjectsPlanModule } from './dev-dashboard/new-projects-plan/new-pro
 import { AuthModule } from './auth/auth.module.js';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { StringValue } from 'ms'
+import { StringValue } from 'ms';
 
 @Module({
   imports: [
@@ -20,15 +20,15 @@ import { StringValue } from 'ms'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.getOrThrow<string>('MONGODB_URI')
-      })
+        uri: configService.getOrThrow<string>('MONGODB_URI'),
+      }),
     }),
 
     ThoughtsModule,
     NewProjectsPlanModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

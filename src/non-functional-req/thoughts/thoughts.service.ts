@@ -11,7 +11,7 @@ import { CreateThoughtsDto } from './dto/create-thoughts.dto.js';
 export class ThoughtsService {
   /**
    * Creates an instance of `ThoughtsService`.
-   * 
+   *
    * @param thoughtModel - The Mongoose model injected for the `Thoughts` collection.
    */
   constructor(
@@ -24,7 +24,7 @@ export class ThoughtsService {
    *
    * @param dto - Data transfer object containing the thought details.
    * @returns A promise that resolves to the newly created {@link Thoughts} document.
-   * 
+   *
    * @example
    * const newThought = await thoughtsService.create({
    *   content: 'Hello World',
@@ -48,7 +48,7 @@ export class ThoughtsService {
    *
    * @param dateStr - An ISO date string or date representation (e.g., `'2026-09-25'`).
    * @returns A promise that resolves to the matching {@link Thoughts} document.
-   * 
+   *
    * @throws {@link NotFoundException}
    * Thrown when no thought entry exists for the specified date.
    */
@@ -73,7 +73,7 @@ export class ThoughtsService {
    * Retrieves today's thought, falling back to the most recently published thought if today's is unavailable.
    *
    * @returns A promise that resolves to today's or the latest published {@link Thoughts} document.
-   * 
+   *
    * @throws {@link NotFoundException}
    * Thrown when no thoughts match the criteria or no published thoughts exist.
    */

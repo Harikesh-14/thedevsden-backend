@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { NewProjectsPlanService } from './new-projects-plan.service.js';
 import { CreateNewProjectsPlanDto } from './dto/create-new-projects-plan.dto.js';
 import { UpdateNewProjectsPlanDto } from './dto/update-new-projects-plan.dto.js';
@@ -6,8 +14,8 @@ import { UpdateNewProjectsPlanDto } from './dto/update-new-projects-plan.dto.js'
 @Controller('new-projects-plan')
 export class NewProjectsPlanController {
   constructor(
-    private readonly newProjectsPlanService: NewProjectsPlanService
-  ) { }
+    private readonly newProjectsPlanService: NewProjectsPlanService,
+  ) {}
 
   @Post()
   create(@Body() createNewProjectsPlanDto: CreateNewProjectsPlanDto) {
@@ -25,7 +33,10 @@ export class NewProjectsPlanController {
   }
 
   @Put('/update/:id')
-  updateProjectById(@Param('id') id: string, @Body() dto: UpdateNewProjectsPlanDto) {
+  updateProjectById(
+    @Param('id') id: string,
+    @Body() dto: UpdateNewProjectsPlanDto,
+  ) {
     return this.newProjectsPlanService.update(id, dto);
   }
 

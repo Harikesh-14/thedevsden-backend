@@ -14,16 +14,10 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategies.js';
 
     JwtModule.register({}),
 
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   providers: [AuthService, JwtStrategy, JwtRefreshStrategy],
   controllers: [AuthController],
-  exports: [
-    AuthService,
-    JwtStrategy,
-    PassportModule
-  ]
+  exports: [AuthService, JwtStrategy, PassportModule],
 })
 export class AuthModule {}

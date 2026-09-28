@@ -4,21 +4,19 @@ import { CreateThoughtsDto } from './dto/create-thoughts.dto.js';
 
 @Controller('thoughts')
 export class ThoughtsController {
-  constructor(
-    private readonly thoughtsService: ThoughtsService,
-  ){}
+  constructor(private readonly thoughtsService: ThoughtsService) {}
 
   @Post()
   create(@Body() createThoughtDto: CreateThoughtsDto) {
     return this.thoughtsService.create(createThoughtDto);
   }
 
-  @Get("/today")
+  @Get('/today')
   getToday() {
     return this.thoughtsService.getTodatOrLatest();
   }
 
-  @Get("/date/:date")
+  @Get('/date/:date')
   getByDate(@Param('date') date: string) {
     return this.thoughtsService.findByDisplayDate(date);
   }

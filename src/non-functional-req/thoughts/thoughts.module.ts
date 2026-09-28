@@ -9,11 +9,11 @@ import { Thoughts, ThoughtsSchema } from './schemas/thoughts.schema.js';
     MongooseModule.forFeature([
       {
         name: Thoughts.name,
-        schema: ThoughtsSchema
-      }
-    ])
+        schema: ThoughtsSchema,
+      },
+    ]),
   ],
   controllers: [ThoughtsController],
-  providers: [ThoughtsService]
+  providers: [ThoughtsService],
 })
 export class ThoughtsModule {}
