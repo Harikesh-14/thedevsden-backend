@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { StringValue } from 'ms';
+import { TaskManagerModule } from './dev-dashboard/task-manager/task-manager.module.js';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { StringValue } from 'ms';
     ThoughtsModule,
     NewProjectsPlanModule,
     AuthModule,
+    TaskManagerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
