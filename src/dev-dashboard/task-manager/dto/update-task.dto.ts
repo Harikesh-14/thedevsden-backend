@@ -1,4 +1,4 @@
-import { IsBoolean, IsIn, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
 
 export class UpdateTaskDto {
   @IsOptional()
@@ -15,5 +15,5 @@ export class UpdateTaskDto {
 
   @IsOptional()
   @IsIn(['high', 'medium', 'low'])
-  priority?: 'high' | 'medium' | 'low'
+  priority?: 'high' | 'medium' | 'low';
 }

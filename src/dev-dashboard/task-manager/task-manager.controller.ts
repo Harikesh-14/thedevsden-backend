@@ -20,9 +20,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 @UseGuards(JwtAuthGuard)
 @Controller('task-manager')
 export class TaskManagerController {
-  constructor(
-    private readonly taskManagerService: TaskManagerService,
-  ) {}
+  constructor(private readonly taskManagerService: TaskManagerService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -44,19 +42,13 @@ export class TaskManagerController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  updateTask(
-    @Param('id') id: string,
-    @Body() dto: UpdateTaskDto,
-  ) {
+  updateTask(@Param('id') id: string, @Body() dto: UpdateTaskDto) {
     return this.taskManagerService.updateTask(id, dto);
   }
 
   @Patch(':id/status')
   @HttpCode(HttpStatus.OK)
-  updateStatus(
-    @Param('id') id: string,
-    @Body() dto: UpdateTaskStatusDto,
-  ) {
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateTaskStatusDto) {
     return this.taskManagerService.updateStatus(id, dto);
   }
 

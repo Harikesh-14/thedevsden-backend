@@ -1,10 +1,10 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument } from 'mongoose'
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type TaskDocument = HydratedDocument<Task>
+export type TaskDocument = HydratedDocument<Task>;
 
 @Schema({
-  timestamps: true
+  timestamps: true,
 })
 export class Task {
   @Prop({
@@ -14,13 +14,14 @@ export class Task {
   task: string;
 
   @Prop({
-    default: null
+    type: String,
+    default: null,
   })
   description: string | null;
 
   @Prop({
     default: false,
-    required: true
+    required: true,
   })
   isCompleted: boolean;
 

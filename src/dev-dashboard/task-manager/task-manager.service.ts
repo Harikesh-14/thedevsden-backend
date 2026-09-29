@@ -11,7 +11,7 @@ export class TaskManagerService {
   constructor(
     @InjectModel(Task.name)
     private readonly taskManagerModel: Model<TaskDocument>,
-  ) { }
+  ) {}
 
   /**
    * Creates a new task using the provided task data.
@@ -43,9 +43,7 @@ export class TaskManagerService {
     const task = await this.taskManagerModel.findById(id).exec();
 
     if (!task) {
-      throw new NotFoundException(
-        `Task with task id "${id}" not found`,
-      );
+      throw new NotFoundException(`Task with task id "${id}" not found`);
     }
 
     return task;
@@ -62,10 +60,7 @@ export class TaskManagerService {
    * @returns The updated task document.
    * @throws {NotFoundException} If no task exists with the provided ID.
    */
-  async updateTask(
-    id: string,
-    dto: UpdateTaskDto,
-  ): Promise<TaskDocument> {
+  async updateTask(id: string, dto: UpdateTaskDto): Promise<TaskDocument> {
     const task = await this.taskManagerModel
       .findByIdAndUpdate(
         id,
@@ -78,9 +73,7 @@ export class TaskManagerService {
       .exec();
 
     if (!task) {
-      throw new NotFoundException(
-        `Task with the task id "${id}" not found`,
-      );
+      throw new NotFoundException(`Task with the task id "${id}" not found`);
     }
 
     return task;
@@ -110,9 +103,7 @@ export class TaskManagerService {
       .exec();
 
     if (!task) {
-      throw new NotFoundException(
-        `Task with the task id "${id}" not found`,
-      );
+      throw new NotFoundException(`Task with the task id "${id}" not found`);
     }
 
     return task;
@@ -125,14 +116,10 @@ export class TaskManagerService {
    * @throws {NotFoundException} If no task exists with the provided ID.
    */
   async remove(id: string): Promise<void> {
-    const result = await this.taskManagerModel
-      .findByIdAndDelete(id)
-      .exec();
+    const result = await this.taskManagerModel.findByIdAndDelete(id).exec();
 
     if (!result) {
-      throw new NotFoundException(
-        `Task with ID "${id}" not found`,
-      );
+      throw new NotFoundException(`Task with ID "${id}" not found`);
     }
   }
 }
