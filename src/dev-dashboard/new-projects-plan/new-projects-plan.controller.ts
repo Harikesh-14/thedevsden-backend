@@ -6,11 +6,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { NewProjectsPlanService } from './new-projects-plan.service.js';
 import { CreateNewProjectsPlanDto } from './dto/create-new-projects-plan.dto.js';
 import { UpdateNewProjectsPlanDto } from './dto/update-new-projects-plan.dto.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
+@UseGuards(JwtAuthGuard)
 @Controller('new-projects-plan')
 export class NewProjectsPlanController {
   constructor(
