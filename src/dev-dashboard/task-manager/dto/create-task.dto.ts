@@ -1,5 +1,7 @@
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsDate,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -22,4 +24,8 @@ export class CreateTaskDto {
   @IsOptional()
   @IsIn(['high', 'medium', 'low'])
   priority?: 'high' | 'medium' | 'low';
+
+  @Type(() => Date)
+  @IsDate()
+  dueDate: Date
 }

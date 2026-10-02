@@ -31,6 +31,12 @@ export class Task {
     enum: ['high', 'medium', 'low'],
   })
   priority: 'high' | 'medium' | 'low';
+
+  @Prop({
+    required: true,
+    type: Date
+  })
+  dueDate: Date | null;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
