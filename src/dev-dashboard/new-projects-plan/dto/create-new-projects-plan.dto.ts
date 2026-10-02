@@ -50,6 +50,10 @@ export class CreateNewProjectsPlanDto {
 
   @IsString()
   @IsNotEmpty()
+  shortDescription: string;
+
+  @IsString()
+  @IsNotEmpty()
   content: string;
 
   @IsNotEmpty()

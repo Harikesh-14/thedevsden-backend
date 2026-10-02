@@ -21,6 +21,12 @@ export class NewProjectsPlan {
   content: string;
 
   @Prop({
+    required: true,
+    trim: true
+  })
+  shortDescription: string;
+
+  @Prop({
     type: {
       frontend: {
         type: [String],
