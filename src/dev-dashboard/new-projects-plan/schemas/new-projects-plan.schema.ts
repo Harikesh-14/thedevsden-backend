@@ -27,6 +27,12 @@ export class NewProjectsPlan {
   shortDescription: string;
 
   @Prop({
+    type: Boolean,
+    default: false
+  })
+  isActive: boolean;
+
+  @Prop({
     type: {
       frontend: {
         type: [String],

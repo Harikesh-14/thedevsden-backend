@@ -26,7 +26,7 @@ export class NewProjectsPlanService {
   constructor(
     @InjectModel(NewProjectsPlan.name)
     private readonly newProjectPlansModel: Model<NewProjectsPlanDocument>,
-  ) {}
+  ) { }
 
   /**
    * Persists a new project plan document to the database.
@@ -131,6 +131,38 @@ export class NewProjectsPlanService {
       }
 
       throw error;
+    }
+  }
+
+  /**
+   * Updating the status of the current project plan
+   * 
+   * @param id - Mongoose document `_id`
+   * @param status - Status of the current project
+   * @returns A promise that resolves to the newly updated {@link NewProjectsPlan} document or null value.
+   */
+  async updateActiveStatus(id: string, status: boolean): Promise<NewProjectsPlanDocument>{
+    try {
+      const projectPlan = await this.newProjectPlansModel
+        .findByIdAndUpdate(
+          id,
+          { $set: { isActive: status } },
+          {
+            returnDocument: "after",
+            runValidators: true,
+          }
+        )
+        .exec()
+
+      if (!projectPlan) {
+        throw new NotFoundException(
+          `Project plan with ID '${id}' was not found.`,
+        );
+      }
+
+      return projectPlan
+    } catch (error) {
+      throw error
     }
   }
 

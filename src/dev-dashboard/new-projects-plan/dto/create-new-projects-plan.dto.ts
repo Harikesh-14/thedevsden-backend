@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class SkillsDto {
@@ -51,6 +51,9 @@ export class CreateNewProjectsPlanDto {
   @IsString()
   @IsNotEmpty()
   shortDescription: string;
+
+  @IsBoolean()
+  isActive: boolean;
 
   @IsString()
   @IsNotEmpty()

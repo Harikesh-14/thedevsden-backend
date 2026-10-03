@@ -12,13 +12,14 @@ import { NewProjectsPlanService } from './new-projects-plan.service.js';
 import { CreateNewProjectsPlanDto } from './dto/create-new-projects-plan.dto.js';
 import { UpdateNewProjectsPlanDto } from './dto/update-new-projects-plan.dto.js';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
+import { UpdateProjectStatusDto } from './dto/update-project-status.dto.js';
 
 @UseGuards(JwtAuthGuard)
 @Controller('new-projects-plan')
 export class NewProjectsPlanController {
   constructor(
     private readonly newProjectsPlanService: NewProjectsPlanService,
-  ) {}
+  ) { }
 
   @Post()
   create(@Body() createNewProjectsPlanDto: CreateNewProjectsPlanDto) {
@@ -41,6 +42,17 @@ export class NewProjectsPlanController {
     @Body() dto: UpdateNewProjectsPlanDto,
   ) {
     return this.newProjectsPlanService.update(id, dto);
+  }
+
+  @Put('/update/:id')
+  updateProjectByStatus(
+    @Param('id') id: string,
+    @Body() body: UpdateProjectStatusDto,
+  ) {
+    return this.newProjectsPlanService.updateActiveStatus(
+      id,
+      body.isActive,
+    );
   }
 
   @Delete('/delete/:id')
