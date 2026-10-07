@@ -31,6 +31,11 @@ export class NewProjectsPlanController {
     return this.newProjectsPlanService.getAll();
   }
 
+  @Get('/get/overall-stats')
+  getOverallStats() {
+    return this.newProjectsPlanService.getOverallStats();
+  }
+
   @Get('/get/:id')
   getProjectById(@Param('id') id: string) {
     return this.newProjectsPlanService.getById(id);

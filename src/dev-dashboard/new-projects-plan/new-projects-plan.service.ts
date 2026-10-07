@@ -96,6 +96,51 @@ export class NewProjectsPlanService {
     }
   }
 
+  async getOverallStats() {
+    try {
+      const [totalPlans, activePlans, completedPlans, techStackResult] = await Promise.all([
+        this.newProjectPlansModel.countDocuments(),
+
+        this.newProjectPlansModel.countDocuments({ isActive: true }),
+
+        this.newProjectPlansModel.countDocuments({ isActive: false }),
+
+        this.newProjectPlansModel.aggregate([
+          {
+            $project: {
+              skills: {
+                $objectToArray: '$skills',
+              },
+            },
+          },
+          {
+            $unwind: '$skills',
+          },
+          {
+            $unwind: '$skills.v',
+          },
+          {
+            $group: {
+              _id: '$skills.v',
+            },
+          },
+          {
+            $count: "total",
+          }
+        ])
+      ])
+
+      return {
+        totalPlans,
+        activePlans,
+        completedPlans,
+        totalTechStack: techStackResult[0]?.total ?? 0,
+      };
+    } catch (error) {
+      throw error
+    }
+  }
+
   /**
    * Updates an existing project plan document via mongoose document `_id`.
    *
@@ -141,7 +186,7 @@ export class NewProjectsPlanService {
    * @param status - Status of the current project
    * @returns A promise that resolves to the newly updated {@link NewProjectsPlan} document or null value.
    */
-  async updateActiveStatus(id: string, status: boolean): Promise<NewProjectsPlanDocument>{
+  async updateActiveStatus(id: string, status: boolean): Promise<NewProjectsPlanDocument> {
     try {
       const projectPlan = await this.newProjectPlansModel
         .findByIdAndUpdate(
