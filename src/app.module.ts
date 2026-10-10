@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { StringValue } from 'ms';
 import { TaskManagerModule } from './dev-dashboard/task-manager/task-manager.module.js';
+import { RoadmapModule } from './dev-dashboard/roadmap/roadmap.module.js';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TaskManagerModule } from './dev-dashboard/task-manager/task-manager.mod
     NewProjectsPlanModule,
     AuthModule,
     TaskManagerModule,
+    RoadmapModule,
   ],
   controllers: [AppController],
   providers: [AppService],
