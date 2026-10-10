@@ -4,6 +4,7 @@ import { Roadmap, RoadmapSchema } from './schemas/roadmap.schema.js';
 import { RoadmapEdge, RoadmapEdgeSchema } from './schemas/roadmap-edge.schema.js';
 import { RoadmapNode, RoadmapNodeSchema } from './schemas/roadmap-node.schema.js';
 import { RoadmapService } from './roadmap.service.js';
+import { RoadmapController } from './roadmap.controller.js';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { RoadmapService } from './roadmap.service.js';
       { name: RoadmapNode.name, schema: RoadmapNodeSchema }
     ])
   ],
-  providers: [RoadmapService]
+  providers: [RoadmapService],
+  controllers: [RoadmapController]
 })
 export class RoadmapModule {}
