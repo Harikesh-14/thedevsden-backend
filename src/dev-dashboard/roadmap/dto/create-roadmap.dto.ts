@@ -23,5 +23,5 @@ export class CreateRoadmapDto {
 
   @IsOptional()
   @IsEnum(RoadmapVisibility)
-  visibility?: boolean
+  visibility?: RoadmapVisibility;
 }

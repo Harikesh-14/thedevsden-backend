@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument, Types } from "mongoose";
+import { HydratedDocument } from "mongoose";
 
 export type RoadmapDocument = HydratedDocument<Roadmap>;
 
@@ -43,4 +43,3 @@ export class Roadmap {
 export const RoadmapSchema = SchemaFactory.createForClass(Roadmap);
 
 RoadmapSchema.index({ slug: 1 }, { unique: true });
-RoadmapSchema.index({ ownerId: 1, createdAt: -1 });

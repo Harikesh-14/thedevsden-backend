@@ -1,5 +1,5 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose'
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument, Types } from "mongoose";
 
 export type RoadmapEdgeDocument = HydratedDocument<RoadmapEdge>;
 
@@ -9,12 +9,12 @@ export enum RoadmapEdgeType {
   OPTIONAL = "optional",
 }
 
+@Schema({ timestamps: true })
 export class RoadmapEdge {
   @Prop({
     type: Types.ObjectId,
     ref: "Roadmap",
     required: true,
-    index: true,
   })
   roadmapId: Types.ObjectId;
 
@@ -45,21 +45,9 @@ export class RoadmapEdge {
 
 export const RoadmapEdgeSchema = SchemaFactory.createForClass(RoadmapEdge);
 
-RoadmapEdgeSchema.index({
-  roadmapId: 1,
-  sourceNodeId: 1,
-});
-
-RoadmapEdgeSchema.index({
-  roadmapId: 1,
-  targetNodeId: 1,
-});
-
 RoadmapEdgeSchema.index(
-  {
-    roadmapId: 1,
-    sourceNodeId: 1,
-    targetNodeId: 1,
-  },
+  { roadmapId: 1, sourceNodeId: 1, targetNodeId: 1 },
   { unique: true },
 );
+
+RoadmapEdgeSchema.index({ roadmapId: 1, targetNodeId: 1 });
