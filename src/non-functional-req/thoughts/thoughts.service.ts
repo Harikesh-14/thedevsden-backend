@@ -17,7 +17,7 @@ export class ThoughtsService {
   constructor(
     @InjectModel(Thoughts.name)
     private readonly thoughtModel: Model<ThoughtsDocument>,
-  ) {}
+  ) { }
 
   /**
    * Persists a new thought document to the database with a UTC-normalized display date.
@@ -99,5 +99,37 @@ export class ThoughtsService {
     }
 
     return thought;
+  }
+
+  async update(id: string, dto: Partial<CreateThoughtsDto>): Promise<Thoughts> {
+    const updateData = { ...dto };
+
+    if (dto.displayDate) {
+      const normalizeDate = new Date(dto.displayDate);
+      normalizeDate.setUTCHours(0, 0, 0, 0);
+      updateData.displayDate = normalizeDate;
+    }
+
+    const updatedThought = await this.thoughtModel
+      .findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
+      .exec();
+
+    if (!updatedThought) {
+      throw new NotFoundException(`Thought with ID ${id} not found`);
+    }
+
+    return updatedThought;
+  }
+
+  async remove(id: string): Promise<Thoughts> {
+    const deletedThought = await this.thoughtModel
+      .findByIdAndDelete(id)
+      .exec();
+
+    if (!deletedThought) {
+      throw new NotFoundException(`Thought with ID ${id} not found`);
+    }
+
+    return deletedThought;
   }
 }
