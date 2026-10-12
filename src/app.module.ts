@@ -6,11 +6,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ThoughtsModule } from './non-functional-req/thoughts/thoughts.module.js';
 import { NewProjectsPlanModule } from './dev-dashboard/new-projects-plan/new-projects-plan.module.js';
 import { AuthModule } from './auth/auth.module.js';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { StringValue } from 'ms';
 import { TaskManagerModule } from './dev-dashboard/task-manager/task-manager.module.js';
 import { RoadmapModule } from './dev-dashboard/roadmap/roadmap.module.js';
+import { ContactMeModule } from './portfolio/contact-me/contact-me.module.js';
 
 @Module({
   imports: [
@@ -31,6 +29,7 @@ import { RoadmapModule } from './dev-dashboard/roadmap/roadmap.module.js';
     AuthModule,
     TaskManagerModule,
     RoadmapModule,
+    ContactMeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
