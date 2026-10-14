@@ -79,7 +79,7 @@ export class RoadmapNodesService {
           roadmapId: new Types.ObjectId(roadmapId),
         },
         { $set: set },
-        { new: true, runValidators: true },
+        { returnDocument: "after", runValidators: true },
       )
       .exec();
 
