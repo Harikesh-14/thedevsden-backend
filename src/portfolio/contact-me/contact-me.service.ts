@@ -1,4 +1,4 @@
-import { Body, Injectable, NotFoundException, Param } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from "mongoose"
 import { Message, MessageDocument } from './schemas/message.schema.js';
 import { InjectModel } from '@nestjs/mongoose';
