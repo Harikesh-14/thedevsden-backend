@@ -59,7 +59,7 @@ export class AuthController {
 
   // 🔄 Refresh + rotate tokens
   @Post('refresh')
-  @UseGuards(JwtRefreshGuard)
+  // @UseGuards(JwtRefreshGuard)
   @HttpCode(HttpStatus.OK)
   async refresh(
     @CurrentUser()
