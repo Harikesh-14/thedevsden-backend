@@ -5,11 +5,14 @@ import {
   Patch,
   Delete,
   Param,
-  Body
+  Body,
+  UseGuards
 } from '@nestjs/common';
 import { ContactMeService } from './contact-me.service.js';
 import { CreateMessageDto } from './dto/create-message.dto.js';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
+@UseGuards(JwtAuthGuard)
 @Controller('contact-me')
 export class ContactMeController {
   constructor(private readonly contactMeService: ContactMeService) { }

@@ -7,12 +7,15 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 
 import { RoadmapEdgesService } from "./roadmap-edges.service.js";
 import { CreateEdgeDto } from "./dto/create-edge.dto.js";
 import { ParseObjectIdPipe } from "@nestjs/mongoose";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard.js";
 
+@UseGuards(JwtAuthGuard)
 @Controller("roadmap/:roadmapId/edges")
 export class RoadmapEdgesController {
   constructor(

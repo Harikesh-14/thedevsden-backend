@@ -8,13 +8,16 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 
 import { RoadmapNodesService } from "./roadmap-nodes.service.js";
 import { CreateNodeDto } from "./dto/create-node.dto.js";
 import { UpdateNodeDto } from "./dto/update-node.dto.js";
 import { ParseObjectIdPipe } from "@nestjs/mongoose";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard.js";
 
+@UseGuards(JwtAuthGuard)
 @Controller("roadmap/:roadmapId/nodes")
 export class RoadmapNodesController {
   constructor(

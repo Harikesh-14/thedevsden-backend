@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
 import { RoadmapService } from './roadmap.service.js';
 import { CreateRoadmapDto } from './dto/create-roadmap.dto.js';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
+@UseGuards(JwtAuthGuard)
 @Controller('roadmap')
 export class RoadmapController {
   constructor(
