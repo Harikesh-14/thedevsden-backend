@@ -13,11 +13,7 @@ export class ProjectsService {
   ) { }
 
   async create(dto: CreateProjectDto): Promise<ProjectDocument> {
-    try {
-      return await this.projectModel.create(dto);
-    } catch (error: unknown) {
-      throw new Error(error instanceof Error ? error.message : "Failed to create data")
-    }
+    return this.projectModel.create(dto);
   }
 
   async getAll(): Promise<ProjectDocument[]> {
