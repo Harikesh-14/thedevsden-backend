@@ -20,6 +20,12 @@ export class ProjectsService {
     return this.projectModel.find().exec();
   }
 
+  async getFeatured(): Promise<ProjectDocument[]> {
+    return this.projectModel.find({
+      isFeatured: true,
+    })
+  }
+
   async updateById(_id: string, dto: UpdateProjectDto): Promise<ProjectDocument> {
     const updatedProject = await this.projectModel.findByIdAndUpdate(
       _id,

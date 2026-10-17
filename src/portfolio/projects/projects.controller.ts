@@ -13,14 +13,19 @@ import { UpdateProjectDto } from './dto/update-project.dto.js';
 import { ProjectsService } from './projects.service.js';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
-@UseGuards(JwtAuthGuard)
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() dto: CreateProjectDto) {
     return await this.projectsService.create(dto);
+  }
+
+  @Get('/featured')
+  async getFeaturedProjects() {
+    return this.projectsService.getFeatured()
   }
 
   @Get()
