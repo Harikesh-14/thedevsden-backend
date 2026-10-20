@@ -17,6 +17,7 @@ async function bootstrap() {
       if (!origin) return callback(null, true);
 
       const allowedOrigins = [
+        'https://thedevsden.com',
         'http://localhost:3000',
         'http://127.0.0.1:3000',
         process.env.CLIENT_URL,
