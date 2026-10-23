@@ -4,9 +4,9 @@
  */
 export function isDuplicateKeyError(error: unknown): boolean {
   return (
-    typeof error === "object" &&
+    typeof error === 'object' &&
     error !== null &&
-    "code" in error &&
+    'code' in error &&
     error.code === 11000
   );
 }

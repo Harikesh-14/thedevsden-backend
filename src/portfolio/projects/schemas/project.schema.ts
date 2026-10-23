@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type ProjectDocument = HydratedDocument<Project>;
 
@@ -55,7 +55,7 @@ export class Project {
 
   @Prop({
     type: Boolean,
-    default: false
+    default: false,
   })
   isFeatured: boolean;
 }

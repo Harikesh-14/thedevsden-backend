@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ThoughtsService } from './thoughts.service.js';
 import { CreateThoughtsDto } from './dto/create-thoughts.dto.js';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
@@ -6,7 +15,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 @UseGuards(JwtAuthGuard)
 @Controller('thoughts')
 export class ThoughtsController {
-  constructor(private readonly thoughtsService: ThoughtsService) { }
+  constructor(private readonly thoughtsService: ThoughtsService) {}
 
   @Post()
   create(@Body() createThoughtDto: CreateThoughtsDto) {
@@ -24,7 +33,10 @@ export class ThoughtsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: Partial<CreateThoughtsDto>) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDto: Partial<CreateThoughtsDto>,
+  ) {
     return this.thoughtsService.update(id, updateDto);
   }
 

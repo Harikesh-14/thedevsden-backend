@@ -27,5 +27,5 @@ export class CreateTaskDto {
 
   @Type(() => Date)
   @IsDate()
-  dueDate: Date
+  dueDate: Date;
 }

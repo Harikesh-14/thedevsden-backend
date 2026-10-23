@@ -1,12 +1,12 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type RoadmapDocument = HydratedDocument<Roadmap>;
 
 export enum RoadmapVisibility {
-  PUBLIC = "public",
-  PRIVATE = "private",
-  UNLISTED = "unlisted",
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+  UNLISTED = 'unlisted',
 }
 
 @Schema({ timestamps: true })
@@ -27,7 +27,7 @@ export class Roadmap {
   slug: string;
 
   @Prop({
-    default: "",
+    default: '',
     maxlength: 1000,
   })
   description: string;

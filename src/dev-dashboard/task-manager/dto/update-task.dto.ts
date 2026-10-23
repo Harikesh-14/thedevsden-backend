@@ -21,5 +21,5 @@ export class UpdateTaskDto {
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  dueDate?: Date
+  dueDate?: Date;
 }

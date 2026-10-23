@@ -1,21 +1,21 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument, Types } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type RoadmapNodeDocument = HydratedDocument<RoadmapNode>;
 
 export enum RoadmapNodeType {
-  TOPIC = "topic",
-  PROJECT = "project",
-  RESOURCE = "resource",
-  SECTION = "section",
-  DECISION = "decision",
+  TOPIC = 'topic',
+  PROJECT = 'project',
+  RESOURCE = 'resource',
+  SECTION = 'section',
+  DECISION = 'decision',
 }
 
 @Schema({ timestamps: true })
 export class RoadmapNode {
   @Prop({
     type: Types.ObjectId,
-    ref: "Roadmap",
+    ref: 'Roadmap',
     required: true,
   })
   roadmapId: Types.ObjectId;
@@ -30,7 +30,7 @@ export class RoadmapNode {
   @Prop({ required: true, trim: true })
   title: string;
 
-  @Prop({ default: "" })
+  @Prop({ default: '' })
   description: string;
 
   @Prop({

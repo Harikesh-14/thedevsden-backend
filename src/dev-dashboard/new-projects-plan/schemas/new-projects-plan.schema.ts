@@ -22,13 +22,13 @@ export class NewProjectsPlan {
 
   @Prop({
     required: true,
-    trim: true
+    trim: true,
   })
   shortDescription: string;
 
   @Prop({
     type: Boolean,
-    default: false
+    default: false,
   })
   isActive: boolean;
 

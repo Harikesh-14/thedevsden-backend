@@ -6,11 +6,9 @@ import { ContactMeController } from './contact-me.controller.js';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      {name: Message.name, schema: MessageSchema}
-    ])
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
   ],
   providers: [ContactMeService],
-  controllers: [ContactMeController]
+  controllers: [ContactMeController],
 })
 export class ContactMeModule {}

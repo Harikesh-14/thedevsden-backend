@@ -1,5 +1,13 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString, Length, Matches, MaxLength } from "class-validator";
-import { RoadmapVisibility } from "../schemas/roadmap.schema.js";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+  MaxLength,
+} from 'class-validator';
+import { RoadmapVisibility } from '../schemas/roadmap.schema.js';
 
 export class CreateRoadmapDto {
   @IsString()
@@ -12,7 +20,7 @@ export class CreateRoadmapDto {
   @MaxLength(120)
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message:
-      "slug must contain lowercase letters, numbers, and single hyphens between segments",
+      'slug must contain lowercase letters, numbers, and single hyphens between segments',
   })
   slug: string;
 

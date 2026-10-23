@@ -4,8 +4,8 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-} from "class-validator";
-import { RoadmapEdgeType } from "../schemas/roadmap-edge.schema.js";
+} from 'class-validator';
+import { RoadmapEdgeType } from '../schemas/roadmap-edge.schema.js';
 
 export class CreateEdgeDto {
   @IsMongoId()

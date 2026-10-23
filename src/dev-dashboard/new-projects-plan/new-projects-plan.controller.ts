@@ -19,7 +19,7 @@ import { UpdateProjectStatusDto } from './dto/update-project-status.dto.js';
 export class NewProjectsPlanController {
   constructor(
     private readonly newProjectsPlanService: NewProjectsPlanService,
-  ) { }
+  ) {}
 
   @Post()
   create(@Body() createNewProjectsPlanDto: CreateNewProjectsPlanDto) {
@@ -54,10 +54,7 @@ export class NewProjectsPlanController {
     @Param('id') id: string,
     @Body() body: UpdateProjectStatusDto,
   ) {
-    return this.newProjectsPlanService.updateActiveStatus(
-      id,
-      body.isActive,
-    );
+    return this.newProjectsPlanService.updateActiveStatus(id, body.isActive);
   }
 
   @Delete('/delete/:id')

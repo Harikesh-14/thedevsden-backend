@@ -4,22 +4,22 @@ import {
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
-} from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 
-import { Roadmap, RoadmapDocument } from "./schemas/roadmap.schema.js";
+import { Roadmap, RoadmapDocument } from './schemas/roadmap.schema.js';
 import {
   RoadmapNode,
   RoadmapNodeDocument,
-} from "./schemas/roadmap-node.schema.js";
+} from './schemas/roadmap-node.schema.js';
 import {
   RoadmapEdge,
   RoadmapEdgeDocument,
   RoadmapEdgeType,
-} from "./schemas/roadmap-edge.schema.js";
-import { CreateEdgeDto } from "./dto/create-edge.dto.js";
-import { isDuplicateKeyError } from "../../utils/is-duplicate-key-error.js";
+} from './schemas/roadmap-edge.schema.js';
+import { CreateEdgeDto } from './dto/create-edge.dto.js';
+import { isDuplicateKeyError } from '../../utils/is-duplicate-key-error.js';
 
 @Injectable()
 export class RoadmapEdgesService {
@@ -32,13 +32,13 @@ export class RoadmapEdgesService {
 
     @InjectModel(RoadmapEdge.name)
     private readonly edgeModel: Model<RoadmapEdgeDocument>,
-  ) { }
+  ) {}
 
   private async ensureRoadmapExists(roadmapId: Types.ObjectId) {
     const exists = await this.roadmapModel.exists({ _id: roadmapId });
 
     if (!exists) {
-      throw new NotFoundException("Roadmap not found");
+      throw new NotFoundException('Roadmap not found');
     }
   }
 
@@ -53,7 +53,7 @@ export class RoadmapEdgesService {
   ): Promise<boolean> {
     const edges = await this.edgeModel
       .find({ roadmapId, type: RoadmapEdgeType.PREREQUISITE })
-      .select("sourceNodeId targetNodeId")
+      .select('sourceNodeId targetNodeId')
       .lean()
       .exec();
 
@@ -94,7 +94,7 @@ export class RoadmapEdgesService {
     const targetId = new Types.ObjectId(dto.targetNodeId);
 
     if (sourceId.equals(targetId)) {
-      throw new BadRequestException("A node cannot connect to itself");
+      throw new BadRequestException('A node cannot connect to itself');
     }
 
     await this.ensureRoadmapExists(roadmapObjectId);
@@ -105,7 +105,7 @@ export class RoadmapEdgesService {
     });
 
     if (nodeCount !== 2) {
-      throw new BadRequestException("Both nodes must belong to this roadmap");
+      throw new BadRequestException('Both nodes must belong to this roadmap');
     }
 
     const type = dto.type ?? RoadmapEdgeType.PREREQUISITE;
@@ -117,7 +117,7 @@ export class RoadmapEdgesService {
       (await this.wouldCreateCycle(roadmapObjectId, sourceId, targetId))
     ) {
       throw new UnprocessableEntityException(
-        "This connection would create a circular prerequisite",
+        'This connection would create a circular prerequisite',
       );
     }
 
@@ -131,7 +131,7 @@ export class RoadmapEdgesService {
       });
     } catch (error: unknown) {
       if (isDuplicateKeyError(error)) {
-        throw new ConflictException("This connection already exists");
+        throw new ConflictException('This connection already exists');
       }
 
       throw error;
@@ -154,9 +154,9 @@ export class RoadmapEdgesService {
       .exec();
 
     if (!edge) {
-      throw new NotFoundException("Roadmap connection not found");
+      throw new NotFoundException('Roadmap connection not found');
     }
 
-    return { message: "Connection deleted successfully" };
+    return { message: 'Connection deleted successfully' };
   }
 }

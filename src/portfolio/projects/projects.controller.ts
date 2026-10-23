@@ -25,7 +25,7 @@ export class ProjectsController {
 
   @Get('/featured')
   async getFeaturedProjects() {
-    return this.projectsService.getFeatured()
+    return this.projectsService.getFeatured();
   }
 
   @Get()
@@ -34,10 +34,7 @@ export class ProjectsController {
   }
 
   @Patch(':id')
-  async updateById(
-    @Param('id') id: string,
-    @Body() dto: UpdateProjectDto,
-  ) {
+  async updateById(@Param('id') id: string, @Body() dto: UpdateProjectDto) {
     return await this.projectsService.updateById(id, dto);
   }
 

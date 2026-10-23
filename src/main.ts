@@ -23,7 +23,10 @@ async function bootstrap() {
         'http://127.0.0.1:3000',
       ].filter(Boolean);
 
-      if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      if (
+        allowedOrigins.includes(origin) ||
+        process.env.NODE_ENV !== 'production'
+      ) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));

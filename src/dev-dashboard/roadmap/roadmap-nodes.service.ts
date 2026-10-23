@@ -1,18 +1,18 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 
-import { Roadmap, RoadmapDocument } from "./schemas/roadmap.schema.js";
+import { Roadmap, RoadmapDocument } from './schemas/roadmap.schema.js';
 import {
   RoadmapNode,
   RoadmapNodeDocument,
-} from "./schemas/roadmap-node.schema.js";
+} from './schemas/roadmap-node.schema.js';
 import {
   RoadmapEdge,
   RoadmapEdgeDocument,
-} from "./schemas/roadmap-edge.schema.js";
-import { CreateNodeDto } from "./dto/create-node.dto.js";
-import { UpdateNodeDto } from "./dto/update-node.dto.js";
+} from './schemas/roadmap-edge.schema.js';
+import { CreateNodeDto } from './dto/create-node.dto.js';
+import { UpdateNodeDto } from './dto/update-node.dto.js';
 
 @Injectable()
 export class RoadmapNodesService {
@@ -25,13 +25,13 @@ export class RoadmapNodesService {
 
     @InjectModel(RoadmapEdge.name)
     private readonly edgeModel: Model<RoadmapEdgeDocument>,
-  ) { }
+  ) {}
 
   private async ensureRoadmapExists(roadmapId: Types.ObjectId) {
     const exists = await this.roadmapModel.exists({ _id: roadmapId });
 
     if (!exists) {
-      throw new NotFoundException("Roadmap not found");
+      throw new NotFoundException('Roadmap not found');
     }
   }
 
@@ -63,14 +63,14 @@ export class RoadmapNodesService {
   async update(roadmapId: string, nodeId: string, dto: UpdateNodeDto) {
     const set: Record<string, unknown> = {};
 
-    if (dto.type !== undefined) set["type"] = dto.type;
-    if (dto.title !== undefined) set["title"] = dto.title;
-    if (dto.description !== undefined) set["description"] = dto.description;
-    if (dto.isOptional !== undefined) set["isOptional"] = dto.isOptional;
-    if (dto.data !== undefined) set["data"] = dto.data;
+    if (dto.type !== undefined) set['type'] = dto.type;
+    if (dto.title !== undefined) set['title'] = dto.title;
+    if (dto.description !== undefined) set['description'] = dto.description;
+    if (dto.isOptional !== undefined) set['isOptional'] = dto.isOptional;
+    if (dto.data !== undefined) set['data'] = dto.data;
 
-    if (dto.position?.x !== undefined) set["position.x"] = dto.position.x;
-    if (dto.position?.y !== undefined) set["position.y"] = dto.position.y;
+    if (dto.position?.x !== undefined) set['position.x'] = dto.position.x;
+    if (dto.position?.y !== undefined) set['position.y'] = dto.position.y;
 
     const node = await this.nodeModel
       .findOneAndUpdate(
@@ -79,12 +79,12 @@ export class RoadmapNodesService {
           roadmapId: new Types.ObjectId(roadmapId),
         },
         { $set: set },
-        { returnDocument: "after", runValidators: true },
+        { returnDocument: 'after', runValidators: true },
       )
       .exec();
 
     if (!node) {
-      throw new NotFoundException("Roadmap node not found");
+      throw new NotFoundException('Roadmap node not found');
     }
 
     return node;
@@ -100,7 +100,7 @@ export class RoadmapNodesService {
     });
 
     if (!exists) {
-      throw new NotFoundException("Roadmap node not found");
+      throw new NotFoundException('Roadmap node not found');
     }
 
     await this.edgeModel
@@ -114,6 +114,6 @@ export class RoadmapNodesService {
       .deleteOne({ _id: nodeObjectId, roadmapId: roadmapObjectId })
       .exec();
 
-    return { message: "Node deleted successfully" };
+    return { message: 'Node deleted successfully' };
   }
 }

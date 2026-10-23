@@ -34,7 +34,7 @@ export class Task {
 
   @Prop({
     required: true,
-    type: Date
+    type: Date,
   })
   dueDate: Date | null;
 }

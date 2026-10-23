@@ -21,6 +21,15 @@ import { JwtRefreshGuard } from './guards/jwt-refresh.guard.js';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  private getCookieOptions() {
+    return {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none' as const,
+      path: '/',
+    };
+  }
+
   @Post('register')
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
@@ -35,25 +44,21 @@ export class AuthController {
     const { user, accessToken, refreshToken } =
       await this.authService.login(dto);
 
+    const cookiesOptions = this.getCookieOptions();
+
     response.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      ...cookiesOptions,
       maxAge: 15 * 60 * 1000,
     });
 
     response.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      ...cookiesOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return {
       message: 'Login successful',
       user,
-      accessToken,
-      refreshToken,
     };
   }
 
@@ -75,17 +80,15 @@ export class AuthController {
       user.refreshToken,
     );
 
+    const cookiesOptions = this.getCookieOptions();
+
     response.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      ...cookiesOptions,
       maxAge: 15 * 60 * 1000,
     });
 
     response.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      ...cookiesOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -103,8 +106,8 @@ export class AuthController {
   ) {
     await this.authService.logout(userId);
 
-    response.clearCookie('access_token');
-    response.clearCookie('refresh_token');
+    response.clearCookie('access_token', this.getCookieOptions());
+    response.clearCookie('refresh_token', this.getCookieOptions());
 
     return { message: 'Logged out successfully' };
   }

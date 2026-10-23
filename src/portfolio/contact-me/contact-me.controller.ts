@@ -6,7 +6,7 @@ import {
   Delete,
   Param,
   Body,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { ContactMeService } from './contact-me.service.js';
 import { CreateMessageDto } from './dto/create-message.dto.js';
@@ -15,7 +15,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 @UseGuards(JwtAuthGuard)
 @Controller('contact-me')
 export class ContactMeController {
-  constructor(private readonly contactMeService: ContactMeService) { }
+  constructor(private readonly contactMeService: ContactMeService) {}
 
   @Post()
   create(@Body() dto: CreateMessageDto) {
@@ -33,10 +33,7 @@ export class ContactMeController {
   }
 
   @Patch(':id/read')
-  updateReadStatus(
-    @Param('id') id: string,
-    @Body('isRead') isRead: boolean,
-  ) {
+  updateReadStatus(@Param('id') id: string, @Body('isRead') isRead: boolean) {
     return this.contactMeService.updateReadStatus(id, isRead);
   }
 

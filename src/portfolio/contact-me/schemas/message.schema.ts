@@ -1,56 +1,56 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose"
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type MessageDocument = HydratedDocument<Message>;
 
 @Schema({
-  timestamps: true
+  timestamps: true,
 })
 export class Message {
   @Prop({
     required: true,
-    trim: true
+    trim: true,
   })
   name: string;
 
   @Prop({
     required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
   })
   email: string;
 
   @Prop({
     required: true,
-    trim: true
+    trim: true,
   })
   subject: string;
 
   @Prop({
     required: true,
-    trim: true
+    trim: true,
   })
   message: string;
 
   @Prop({
-    default: false
+    default: false,
   })
   isRead: boolean;
 
   @Prop({
-    default: false
+    default: false,
   })
   replied: boolean;
 
   @Prop({
-    default: false
+    default: false,
   })
   isArchived: boolean;
 
   @Prop({
-    trim: true
+    trim: true,
   })
   adminNotes?: string;
 }
 
-export const MessageSchema = SchemaFactory.createForClass(Message)
+export const MessageSchema = SchemaFactory.createForClass(Message);

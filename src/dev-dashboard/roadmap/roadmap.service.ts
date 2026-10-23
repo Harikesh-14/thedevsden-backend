@@ -2,21 +2,21 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 
-import { Roadmap, RoadmapDocument } from "./schemas/roadmap.schema.js";
+import { Roadmap, RoadmapDocument } from './schemas/roadmap.schema.js';
 import {
   RoadmapNode,
   RoadmapNodeDocument,
-} from "./schemas/roadmap-node.schema.js";
+} from './schemas/roadmap-node.schema.js';
 import {
   RoadmapEdge,
   RoadmapEdgeDocument,
-} from "./schemas/roadmap-edge.schema.js";
-import { CreateRoadmapDto } from "./dto/create-roadmap.dto.js";
-import { isDuplicateKeyError } from "../../utils/is-duplicate-key-error.js";
+} from './schemas/roadmap-edge.schema.js';
+import { CreateRoadmapDto } from './dto/create-roadmap.dto.js';
+import { isDuplicateKeyError } from '../../utils/is-duplicate-key-error.js';
 
 @Injectable()
 export class RoadmapService {
@@ -29,7 +29,7 @@ export class RoadmapService {
 
     @InjectModel(RoadmapEdge.name)
     private readonly roadmapEdgeModel: Model<RoadmapEdgeDocument>,
-  ) { }
+  ) {}
 
   async create(dto: CreateRoadmapDto): Promise<RoadmapDocument> {
     try {
@@ -41,9 +41,7 @@ export class RoadmapService {
       });
     } catch (error: unknown) {
       if (isDuplicateKeyError(error)) {
-        throw new ConflictException(
-          "A roadmap with this slug already exists",
-        );
+        throw new ConflictException('A roadmap with this slug already exists');
       }
 
       throw error;
@@ -60,7 +58,7 @@ export class RoadmapService {
       .exec();
 
     if (!roadmap) {
-      throw new NotFoundException("Roadmap not found");
+      throw new NotFoundException('Roadmap not found');
     }
 
     return roadmap;
@@ -78,6 +76,6 @@ export class RoadmapService {
     await this.roadmapNodeModel.deleteMany({ roadmapId: roadmap._id });
     await roadmap.deleteOne();
 
-    return { message: "Roadmap deleted successfully" };
+    return { message: 'Roadmap deleted successfully' };
   }
 }

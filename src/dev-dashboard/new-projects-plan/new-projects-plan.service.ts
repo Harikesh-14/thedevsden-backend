@@ -26,7 +26,7 @@ export class NewProjectsPlanService {
   constructor(
     @InjectModel(NewProjectsPlan.name)
     private readonly newProjectPlansModel: Model<NewProjectsPlanDocument>,
-  ) { }
+  ) {}
 
   /**
    * Persists a new project plan document to the database.
@@ -98,37 +98,38 @@ export class NewProjectsPlanService {
 
   async getOverallStats() {
     try {
-      const [totalPlans, activePlans, completedPlans, techStackResult] = await Promise.all([
-        this.newProjectPlansModel.countDocuments(),
+      const [totalPlans, activePlans, completedPlans, techStackResult] =
+        await Promise.all([
+          this.newProjectPlansModel.countDocuments(),
 
-        this.newProjectPlansModel.countDocuments({ isActive: true }),
+          this.newProjectPlansModel.countDocuments({ isActive: true }),
 
-        this.newProjectPlansModel.countDocuments({ isActive: false }),
+          this.newProjectPlansModel.countDocuments({ isActive: false }),
 
-        this.newProjectPlansModel.aggregate([
-          {
-            $project: {
-              skills: {
-                $objectToArray: '$skills',
+          this.newProjectPlansModel.aggregate([
+            {
+              $project: {
+                skills: {
+                  $objectToArray: '$skills',
+                },
               },
             },
-          },
-          {
-            $unwind: '$skills',
-          },
-          {
-            $unwind: '$skills.v',
-          },
-          {
-            $group: {
-              _id: '$skills.v',
+            {
+              $unwind: '$skills',
             },
-          },
-          {
-            $count: "total",
-          }
-        ])
-      ])
+            {
+              $unwind: '$skills.v',
+            },
+            {
+              $group: {
+                _id: '$skills.v',
+              },
+            },
+            {
+              $count: 'total',
+            },
+          ]),
+        ]);
 
       return {
         totalPlans,
@@ -137,7 +138,7 @@ export class NewProjectsPlanService {
         totalTechStack: techStackResult[0]?.total ?? 0,
       };
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -181,23 +182,26 @@ export class NewProjectsPlanService {
 
   /**
    * Updating the status of the current project plan
-   * 
+   *
    * @param id - Mongoose document `_id`
    * @param status - Status of the current project
    * @returns A promise that resolves to the newly updated {@link NewProjectsPlan} document or null value.
    */
-  async updateActiveStatus(id: string, status: boolean): Promise<NewProjectsPlanDocument> {
+  async updateActiveStatus(
+    id: string,
+    status: boolean,
+  ): Promise<NewProjectsPlanDocument> {
     try {
       const projectPlan = await this.newProjectPlansModel
         .findByIdAndUpdate(
           id,
           { $set: { isActive: status } },
           {
-            returnDocument: "after",
+            returnDocument: 'after',
             runValidators: true,
-          }
+          },
         )
-        .exec()
+        .exec();
 
       if (!projectPlan) {
         throw new NotFoundException(
@@ -205,9 +209,9 @@ export class NewProjectsPlanService {
         );
       }
 
-      return projectPlan
+      return projectPlan;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 

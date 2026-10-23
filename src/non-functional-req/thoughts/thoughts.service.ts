@@ -17,7 +17,7 @@ export class ThoughtsService {
   constructor(
     @InjectModel(Thoughts.name)
     private readonly thoughtModel: Model<ThoughtsDocument>,
-  ) { }
+  ) {}
 
   /**
    * Persists a new thought document to the database with a UTC-normalized display date.
@@ -122,9 +122,7 @@ export class ThoughtsService {
   }
 
   async remove(id: string): Promise<Thoughts> {
-    const deletedThought = await this.thoughtModel
-      .findByIdAndDelete(id)
-      .exec();
+    const deletedThought = await this.thoughtModel.findByIdAndDelete(id).exec();
 
     if (!deletedThought) {
       throw new NotFoundException(`Thought with ID ${id} not found`);
