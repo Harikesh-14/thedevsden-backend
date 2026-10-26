@@ -10,6 +10,7 @@ import { TaskManagerModule } from './dev-dashboard/task-manager/task-manager.mod
 import { RoadmapModule } from './dev-dashboard/roadmap/roadmap.module.js';
 import { ContactMeModule } from './portfolio/contact-me/contact-me.module.js';
 import { ProjectsModule } from './portfolio/projects/projects.module.js';
+import { NotepadModule } from './dev-dashboard/notepad/notepad.module.js';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ProjectsModule } from './portfolio/projects/projects.module.js';
     RoadmapModule,
     ContactMeModule,
     ProjectsModule,
+    NotepadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
