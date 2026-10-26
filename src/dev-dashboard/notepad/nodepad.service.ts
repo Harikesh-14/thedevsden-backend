@@ -12,13 +12,11 @@ export class NotepadService {
     private readonly noteModel: Model<Note>,
   ) { }
 
-  // Create a new note
   async create(createNoteDto: CreateNoteDto): Promise<NoteDocument> {
     const note = new this.noteModel(createNoteDto);
     return note.save();
   }
 
-  // Get all notes
   async findAll(): Promise<NoteDocument[]> {
     return this.noteModel
       .find()
@@ -26,7 +24,6 @@ export class NotepadService {
       .exec();
   }
 
-  // Get a single note by ID
   async findOne(id: string): Promise<NoteDocument> {
     const note = await this.noteModel.findById(id).exec();
 
@@ -37,14 +34,13 @@ export class NotepadService {
     return note;
   }
 
-  // Update a note
   async update(
     id: string,
     updateNoteDto: UpdateNoteDto,
   ): Promise<NoteDocument> {
     const note = await this.noteModel
       .findByIdAndUpdate(id, updateNoteDto, {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       })
       .exec();
@@ -56,7 +52,6 @@ export class NotepadService {
     return note;
   }
 
-  // Delete a note
   async remove(id: string): Promise<NoteDocument> {
     const note = await this.noteModel.findByIdAndDelete(id).exec();
 
