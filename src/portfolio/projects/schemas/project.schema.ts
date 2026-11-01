@@ -3,6 +3,36 @@ import { HydratedDocument } from 'mongoose';
 
 export type ProjectDocument = HydratedDocument<Project>;
 
+@Schema({ _id: false })
+export class ProjectTranslation {
+  @Prop({ trim: true })
+  title?: string;
+
+  @Prop({ trim: true })
+  description?: string;
+
+  @Prop({ trim: true })
+  type?: string;
+}
+
+export const ProjectTranslationSchema =
+  SchemaFactory.createForClass(ProjectTranslation);
+
+@Schema({ _id: false })
+export class ProjectTranslations {
+  @Prop({ type: ProjectTranslationSchema })
+  en?: ProjectTranslation;
+
+  @Prop({ type: ProjectTranslationSchema })
+  hi?: ProjectTranslation;
+
+  @Prop({ type: ProjectTranslationSchema })
+  tr?: ProjectTranslation;
+}
+
+export const ProjectTranslationsSchema =
+  SchemaFactory.createForClass(ProjectTranslations);
+
 @Schema({
   timestamps: true,
 })
@@ -58,6 +88,12 @@ export class Project {
     default: false,
   })
   isFeatured: boolean;
+
+  @Prop({
+    type: ProjectTranslationsSchema,
+    default: {},
+  })
+  translations?: ProjectTranslations;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
