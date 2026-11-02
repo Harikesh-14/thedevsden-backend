@@ -28,6 +28,15 @@ export class ProjectTranslations {
 
   @Prop({ type: ProjectTranslationSchema })
   tr?: ProjectTranslation;
+
+  @Prop({ type: ProjectTranslationSchema })
+  ru?: ProjectTranslation;
+
+  @Prop({ type: ProjectTranslationSchema })
+  ta?: ProjectTranslation;
+
+  @Prop({ type: ProjectTranslationSchema })
+  fr?: ProjectTranslation;
 }
 
 export const ProjectTranslationsSchema =

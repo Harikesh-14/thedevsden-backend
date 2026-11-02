@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { CreateProjectDto } from './dto/create-project.dto.js';
 import { UpdateProjectDto } from './dto/update-project.dto.js';
 
-type SupportedLocale = 'en' | 'hi' | 'tr';
+type SupportedLocale = 'en' | 'hi' | 'tr' | 'fr' | 'ru' | 'ta';
 
 @Injectable()
 export class ProjectsService {
@@ -15,7 +15,7 @@ export class ProjectsService {
   ) {}
 
   private normalizeLocale(locale?: string): SupportedLocale {
-    if (locale === 'hi' || locale === 'tr') {
+    if (locale === 'hi' || locale === 'tr' || locale === 'fr' || locale === 'ru' || locale === 'ta') {
       return locale;
     }
 
