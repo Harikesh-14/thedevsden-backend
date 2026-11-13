@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
@@ -38,4 +38,20 @@ export class Blog {
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
 
+
+// PERFORMANCE INDEXES
+
+// 1. Text Search Index (for keyword search across title and content)
 BlogSchema.index({ title: 'text', content: 'text' });
+
+// 2. Optimized index for default listings & tag filtering (Newest first)
+// Matches: { isPublished: true, tags: 'nestjs' } sorted by publishedAt: -1
+BlogSchema.index({ isPublished: 1, tags: 1, publishedAt: -1 });
+
+// 3. Optimized index for trending/popular posts (Most viewed)
+// Matches: { isPublished: true } sorted by viewsCount: -1, publishedAt: -1
+BlogSchema.index({ isPublished: 1, viewsCount: -1, publishedAt: -1 });
+
+// 4. Optimized index for chronological general listings without tags
+// Matches: { isPublished: true } sorted by publishedAt: -1
+BlogSchema.index({ isPublished: 1, publishedAt: -1 });
