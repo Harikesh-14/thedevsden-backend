@@ -1,6 +1,5 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
@@ -8,6 +7,9 @@ export type CategoryDocument = HydratedDocument<Category>;
 export class Category {
   @Prop({ required: true, trim: true })
   name: string;
+
+  @Prop({ required: true, trim: true, lowercase: true })
+  slug: string;
 
   @Prop({ required: true, trim: true })
   badgeText: string;
@@ -22,11 +24,16 @@ export class Category {
   icon: string;
 
   @Prop({
-    type: Types.ObjectId,
-    ref: 'Blog',
     required: true,
+    enum: ['primary', 'secondary', 'tertiary'],
+    default: 'primary',
   })
-  blog: Types.ObjectId;
+  accent: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
+
+CategorySchema.index(
+  { blog: 1, slug: 1 },
+  { unique: true },
+);

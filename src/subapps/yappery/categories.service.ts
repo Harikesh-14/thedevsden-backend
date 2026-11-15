@@ -2,11 +2,11 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Category, CategoryDocument } from './schema/category.schema.js';
-import { Blog, BlogDocument } from './schema/blog.schema.js';
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
 
@@ -15,44 +15,38 @@ export class CategoryService {
   constructor(
     @InjectModel(Category.name)
     private readonly categoryModel: Model<CategoryDocument>,
-
-    @InjectModel(Blog.name)
-    private readonly blogModel: Model<BlogDocument>,
   ) {}
 
   // CREATE CATEGORY
   async create(createCategoryDto: CreateCategoryDto) {
-    const { blog, ...categoryData } = createCategoryDto;
+    const { slug } = createCategoryDto;
 
-    const existingBlog = await this.blogModel.findById(blog);
+    const existingCategory = await this.categoryModel.findOne({ slug });
 
-    if (!existingBlog) {
-      throw new NotFoundException('Blog not found');
+    if (existingCategory) {
+      throw new ConflictException(
+        'A category with this slug already exists.',
+      );
     }
 
-    const category = new this.categoryModel({
-      ...categoryData,
-      blog: new Types.ObjectId(blog),
-    });
+    try {
+      const category = new this.categoryModel(createCategoryDto);
+      return await category.save();
+    } catch (error) {
+      if ((error as { code?: number }).code === 11000) {
+        throw new ConflictException(
+          'A category with this slug already exists.',
+        );
+      }
 
-    return category.save();
+      throw error;
+    }
   }
 
   // GET ALL CATEGORIES
-  async findAll(blogId?: string) {
-    const filter: Record<string, unknown> = {};
-
-    if (blogId) {
-      if (!Types.ObjectId.isValid(blogId)) {
-        throw new BadRequestException('Invalid blog ID');
-      }
-
-      filter.blog = new Types.ObjectId(blogId);
-    }
-
+  async findAll() {
     return this.categoryModel
-      .find(filter)
-      .populate('blog', 'title slug')
+      .find()
       .sort({ createdAt: -1 })
       .exec();
   }
@@ -63,10 +57,7 @@ export class CategoryService {
       throw new BadRequestException('Invalid category ID');
     }
 
-    const category = await this.categoryModel
-      .findById(id)
-      .populate('blog', 'title slug')
-      .exec();
+    const category = await this.categoryModel.findById(id).exec();
 
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -81,38 +72,43 @@ export class CategoryService {
       throw new BadRequestException('Invalid category ID');
     }
 
-    const { blog, ...categoryData } = updateCategoryDto;
+    const existingCategory = await this.categoryModel.findById(id);
 
-    if (blog) {
-      if (!Types.ObjectId.isValid(blog)) {
-        throw new BadRequestException('Invalid blog ID');
-      }
-
-      const existingBlog = await this.blogModel.findById(blog);
-
-      if (!existingBlog) {
-        throw new NotFoundException('Blog not found');
-      }
-    }
-
-    const updateData = {
-      ...categoryData,
-      ...(blog && { blog: new Types.ObjectId(blog) }),
-    };
-
-    const category = await this.categoryModel
-      .findByIdAndUpdate(id, updateData, {
-        new: true,
-        runValidators: true,
-      })
-      .populate('blog', 'title slug')
-      .exec();
-
-    if (!category) {
+    if (!existingCategory) {
       throw new NotFoundException('Category not found');
     }
 
-    return category;
+    if (updateCategoryDto.slug) {
+      const duplicateSlug = await this.categoryModel.findOne({
+        slug: updateCategoryDto.slug,
+        _id: { $ne: id },
+      });
+
+      if (duplicateSlug) {
+        throw new ConflictException(
+          'A category with this slug already exists.',
+        );
+      }
+    }
+
+    try {
+      const category = await this.categoryModel
+        .findByIdAndUpdate(id, updateCategoryDto, {
+          new: true,
+          runValidators: true,
+        })
+        .exec();
+
+      return category;
+    } catch (error) {
+      if ((error as { code?: number }).code === 11000) {
+        throw new ConflictException(
+          'A category with this slug already exists.',
+        );
+      }
+
+      throw error;
+    }
   }
 
   // DELETE CATEGORY

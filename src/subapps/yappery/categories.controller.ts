@@ -6,9 +6,9 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
+
 import { CategoryService } from './categories.service.js';
 import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
@@ -16,7 +16,9 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
 @Controller('categories')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) { }
+  constructor(
+    private readonly categoryService: CategoryService,
+  ) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -25,8 +27,8 @@ export class CategoryController {
   }
 
   @Get()
-  findAll(@Query('blogId') blogId?: string) {
-    return this.categoryService.findAll(blogId);
+  findAll() {
+    return this.categoryService.findAll();
   }
 
   @Get(':id')

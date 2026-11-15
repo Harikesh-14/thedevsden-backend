@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsIn,
   IsMongoId,
   IsNotEmpty,
   IsOptional,
@@ -35,4 +36,12 @@ export class CreateCategoryDto {
   @IsMongoId()
   @IsNotEmpty()
   blog: string;
+
+  @IsString()
+  @IsNotEmpty()
+  slug: string;
+
+  @IsString()
+  @IsIn(['primary', 'secondary', 'tertiary'])
+  accent: string;
 }
