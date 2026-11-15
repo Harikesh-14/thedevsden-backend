@@ -5,7 +5,8 @@ import {
   IsArray,
   IsBoolean,
   MaxLength,
-  IsUrl
+  IsUrl,
+  IsMongoId,
 } from 'class-validator';
 
 export class CreateBlogDto {
@@ -22,6 +23,10 @@ export class CreateBlogDto {
   @IsString()
   @IsNotEmpty({ message: 'Blog content cannot be empty' })
   content: string;
+
+  @IsMongoId({ message: 'Please provide a valid category ID' })
+  @IsNotEmpty({ message: 'Category is required' })
+  category: string;
 
   @IsOptional()
   @IsArray()

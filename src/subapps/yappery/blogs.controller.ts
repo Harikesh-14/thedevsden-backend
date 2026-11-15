@@ -10,18 +10,16 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+
 import { BlogsService } from './blogs.service.js';
 import { CreateBlogDto } from './dto/create-blog.dto.js';
 import { UpdateBlogDto } from './dto/update-blog.dto.js';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(private readonly blogsService: BlogsService) { }
+  constructor(private readonly blogsService: BlogsService) {}
 
-  /**
-   * POST /blogs
-   * Create a new blog post
-   */
+  // Create a blog
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createBlogDto: CreateBlogDto) {
@@ -42,41 +40,30 @@ export class BlogsController {
     @Query('onlyPublished') onlyPublished?: string,
     @Query('sortBy') sortBy?: 'newest' | 'oldest' | 'most-viewed',
   ) {
-    const options = {
-      page: page ? parseInt(page, 10) : undefined,
-      limit: limit ? parseInt(limit, 10) : undefined,
+    return this.blogsService.findAll({
+      page: page ? Number(page) : undefined,
+      limit: limit ? Number(limit) : undefined,
       tag,
       search,
       onlyPublished: onlyPublished !== 'false',
       sortBy,
-    };
-
-    return this.blogsService.findAll(options);
+    });
   }
 
-  /**
-   * GET /blogs/:slug
-   * Get a single blog by its URL slug (automatically increments view count)
-   */
+  // Get a blog by slug
   @Get(':slug')
   async findBySlug(@Param('slug') slug: string) {
     return this.blogsService.findBySlug(slug);
   }
 
-  /**
-   * POST /blogs/:slug/view
-   * Explicitly increment the view count for a blog post
-   */
+  // Increment blog views
   @Post(':slug/view')
   @HttpCode(HttpStatus.OK)
   async incrementViews(@Param('slug') slug: string) {
     return this.blogsService.incrementViews(slug);
   }
 
-  /**
-   * PATCH /blogs/:id
-   * Update an existing blog post by its MongoDB ObjectId
-   */
+  // Update a blog
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -85,10 +72,7 @@ export class BlogsController {
     return this.blogsService.update(id, updateBlogDto);
   }
 
-  /**
-   * DELETE /blogs/:id
-   * Delete a blog post by its MongoDB ObjectId
-   */
+  // Delete a blog
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string) {

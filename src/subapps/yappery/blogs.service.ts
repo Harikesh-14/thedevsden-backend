@@ -7,19 +7,35 @@ import { Model } from 'mongoose';
 import { Blog, BlogDocument } from './schema/blog.schema.js';
 import { CreateBlogDto } from './dto/create-blog.dto.js';
 import { UpdateBlogDto } from './dto/update-blog.dto.js';
+import { Category, CategoryDocument } from './schema/category.schema.js';
 
 @Injectable()
 export class BlogsService {
   constructor(
-    @InjectModel(Blog.name) private readonly blogModel: Model<BlogDocument>,
+    @InjectModel(Blog.name)
+    private readonly blogModel: Model<BlogDocument>,
+
+    @InjectModel(Category.name)
+    private readonly categoryModel: Model<CategoryDocument>,
   ) { }
 
   /**
    * Create a new blog post
    */
   async create(createBlogDto: CreateBlogDto): Promise<BlogDocument> {
+    const categoryExists = await this.categoryModel.exists({
+      _id: createBlogDto.category,
+    });
+
+    if (!categoryExists) {
+      throw new NotFoundException(
+        `Category with ID "${createBlogDto.category}" not found`,
+      );
+    }
+
     const slug = await this.generateUniqueSlug(createBlogDto.title);
     const readingTime = this.calculateReadingTime(createBlogDto.content);
+
     const excerpt =
       createBlogDto.excerpt || this.generateExcerpt(createBlogDto.content);
 
@@ -75,6 +91,7 @@ export class BlogsService {
     const [data, total] = await Promise.all([
       this.blogModel
         .find(filter)
+        .populate('category')
         .sort(sortQuery)
         .skip(skip)
         .limit(limit)
@@ -94,7 +111,10 @@ export class BlogsService {
    * Get a single blog by slug (without auto-incrementing views)
    */
   async findBySlug(slug: string): Promise<BlogDocument> {
-    const blog = await this.blogModel.findOne({ slug }).exec();
+    const blog = await this.blogModel
+      .findOne({ slug })
+      .populate('category')
+      .exec();
 
     if (!blog) {
       throw new NotFoundException(`Blog with slug "${slug}" not found`);
@@ -133,6 +153,18 @@ export class BlogsService {
 
     const updatePayload: Record<string, any> = { ...updateBlogDto };
 
+    if (updateBlogDto.category) {
+      const categoryExists = await this.categoryModel.exists({
+        _id: updateBlogDto.category,
+      });
+
+      if (!categoryExists) {
+        throw new NotFoundException(
+          `Category with ID "${updateBlogDto.category}" not found`,
+        );
+      }
+    }
+
     // Regenerate slug if title changed
     if (updateBlogDto.title && updateBlogDto.title !== existingBlog.title) {
       updatePayload.slug = await this.generateUniqueSlug(updateBlogDto.title, id);
@@ -149,7 +181,11 @@ export class BlogsService {
     }
 
     const updatedBlog = await this.blogModel
-      .findByIdAndUpdate(id, updatePayload, { new: true })
+      .findByIdAndUpdate(id, updatePayload, {
+        new: true,
+        runValidators: true,
+      })
+      .populate('category')
       .exec();
 
     return updatedBlog!;
