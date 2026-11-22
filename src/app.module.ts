@@ -11,6 +11,7 @@ import { RoadmapModule } from './dev-dashboard/roadmap/roadmap.module.js';
 import { ContactMeModule } from './portfolio/contact-me/contact-me.module.js';
 import { ProjectsModule } from './portfolio/projects/projects.module.js';
 import { NotepadModule } from './dev-dashboard/notepad/notepad.module.js';
+import { YapperyModule } from './subapps/yappery/yappery.module.js';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { NotepadModule } from './dev-dashboard/notepad/notepad.module.js';
     ContactMeModule,
     ProjectsModule,
     NotepadModule,
+    YapperyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
