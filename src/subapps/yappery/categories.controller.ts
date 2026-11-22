@@ -14,7 +14,7 @@ import { CreateCategoryDto } from './dto/create-category.dto.js';
 import { UpdateCategoryDto } from './dto/update-category.dto.js';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
-@Controller('categories')
+@Controller('yappery/categories')
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,

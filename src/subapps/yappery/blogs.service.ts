@@ -131,7 +131,7 @@ export class BlogsService {
       .findOneAndUpdate(
         { slug },
         { $inc: { viewsCount: 1 } },
-        { new: true, select: 'viewsCount' },
+        { returnDocument: "after", select: 'viewsCount' },
       )
       .exec();
 
@@ -182,7 +182,7 @@ export class BlogsService {
 
     const updatedBlog = await this.blogModel
       .findByIdAndUpdate(id, updatePayload, {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       })
       .populate('category')

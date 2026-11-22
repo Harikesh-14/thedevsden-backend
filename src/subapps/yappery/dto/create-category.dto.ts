@@ -1,7 +1,6 @@
 import {
   IsArray,
   IsIn,
-  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -32,10 +31,6 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   icon: string;
-
-  @IsMongoId()
-  @IsNotEmpty()
-  blog: string;
 
   @IsString()
   @IsNotEmpty()
