@@ -1,9 +1,10 @@
 import {
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Blog, BlogDocument } from './schema/blog.schema.js';
 import { CreateBlogDto } from './dto/create-blog.dto.js';
 import { UpdateBlogDto } from './dto/update-blog.dto.js';
@@ -57,10 +58,16 @@ export class BlogsService {
     page?: number;
     limit?: number;
     tag?: string;
+    category?: string;
     search?: string;
     onlyPublished?: boolean;
     sortBy?: 'newest' | 'oldest' | 'most-viewed';
-  }): Promise<{ data: BlogDocument[]; total: number; page: number; totalPages: number }> {
+  }): Promise<{
+    data: BlogDocument[];
+    total: number;
+    page: number;
+    totalPages: number;
+  }> {
     const page = Math.max(1, options?.page || 1);
     const limit = Math.max(1, options?.limit || 10);
     const skip = (page - 1) * limit;
@@ -71,21 +78,41 @@ export class BlogsService {
       filter.isPublished = true;
     }
 
+    // Filter by tag
     if (options?.tag) {
       filter.tags = options.tag;
     }
 
+    // Filter by category ID
+    if (options?.category) {
+      if (!Types.ObjectId.isValid(options.category)) {
+        throw new BadRequestException('Invalid category ID');
+      }
+
+      filter.category = new Types.ObjectId(options.category);
+    }
+
+    // Search blogs
     if (options?.search) {
       filter.$text = { $search: options.search };
     }
 
-    // Determine sorting criteria
-    let sortQuery: Record<string, 1 | -1> = { publishedAt: -1, createdAt: -1 }; // Default: Newest first
+    // Sorting
+    let sortQuery: Record<string, 1 | -1> = {
+      publishedAt: -1,
+      createdAt: -1,
+    };
 
     if (options?.sortBy === 'oldest') {
-      sortQuery = { publishedAt: 1, createdAt: 1 };
+      sortQuery = {
+        publishedAt: 1,
+        createdAt: 1,
+      };
     } else if (options?.sortBy === 'most-viewed') {
-      sortQuery = { viewsCount: -1, publishedAt: -1 }; // Highest views first, then fallback to newest
+      sortQuery = {
+        viewsCount: -1,
+        publishedAt: -1,
+      };
     }
 
     const [data, total] = await Promise.all([
@@ -96,6 +123,7 @@ export class BlogsService {
         .skip(skip)
         .limit(limit)
         .exec(),
+
       this.blogModel.countDocuments(filter).exec(),
     ]);
 
@@ -200,6 +228,17 @@ export class BlogsService {
       throw new NotFoundException(`Blog with ID "${id}" not found`);
     }
     return { deleted: true };
+  }
+
+  /**
+   * Fetch all unique tags from published blogs
+   */
+  async fetchTags(): Promise<string[]> {
+    const tags = await this.blogModel.distinct('tags', {
+      isPublished: true,
+    }).exec();
+
+    return tags.sort((a, b) => a.localeCompare(b));
   }
 
   // ============================================================================

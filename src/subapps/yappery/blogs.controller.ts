@@ -17,13 +17,18 @@ import { UpdateBlogDto } from './dto/update-blog.dto.js';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(private readonly blogsService: BlogsService) {}
+  constructor(private readonly blogsService: BlogsService) { }
 
   // Create a blog
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createBlogDto: CreateBlogDto) {
     return this.blogsService.create(createBlogDto);
+  }
+
+  @Get('tags')
+  fetchTags() {
+    return this.blogsService.fetchTags();
   }
 
   /**
@@ -36,6 +41,7 @@ export class BlogsController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('tag') tag?: string,
+    @Query('category') category?: string,
     @Query('search') search?: string,
     @Query('onlyPublished') onlyPublished?: string,
     @Query('sortBy') sortBy?: 'newest' | 'oldest' | 'most-viewed',
@@ -44,6 +50,7 @@ export class BlogsController {
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
       tag,
+      category,
       search,
       onlyPublished: onlyPublished !== 'false',
       sortBy,
